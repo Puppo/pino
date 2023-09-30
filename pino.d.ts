@@ -546,7 +546,7 @@ declare namespace pino {
                  * the `send` function will be called based on the main logging `level` (set via `options.level`,
                  * defaulting to `info`).
                  */
-                level?: Level | string;
+                level?: LiteralUnionWithString<Level>;
                 /**
                  * Remotely record log messages.
                  *
@@ -637,7 +637,7 @@ declare namespace pino {
     }
 
     interface ChildLoggerOptions {
-        level?: Level | string;
+        level?: LiteralUnionWithString<Level>;
         serializers?: { [key: string]: SerializerFn };
         customLevels?: { [key: string]: number };
         formatters?: {
