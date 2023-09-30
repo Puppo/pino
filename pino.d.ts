@@ -30,6 +30,7 @@ type ThreadStream = any
 type TimeFn = () => string;
 type MixinFn = (mergeObject: object, level: number) => object;
 type MixinMergeStrategyFn = (mergeObject: object, mixinObject: object) => object;
+type LiteralUnionWithString<T extends string> = T | (string & {});
 
 type CustomLevelLogger<Options> = Options extends { customLevels: Record<string, number> } ? Record<keyof Options["customLevels"], LogFn> : Record<never, LogFn>
 
@@ -105,7 +106,7 @@ export interface LoggerExtras<Options = LoggerOptions> extends EventEmitter {
     /**
      * A utility method for determining if a given log level will write to the destination.
      */
-    isLevelEnabled(level: pino.LevelWithSilent | string): boolean;
+    isLevelEnabled(level: LiteralUnionWithString<pino.LevelWithSilent>): boolean;
 
     /**
      * Returns an object containing all the current bindings, cloned from the ones passed in via logger.child().
@@ -146,7 +147,7 @@ declare namespace pino {
          *
          * You can pass `'silent'` to disable logging.
          */
-        level: pino.LevelWithSilent | string;
+        level: LiteralUnionWithString<pino.LevelWithSilent>;
 
         /**
          * Log at `'fatal'` level the given msg. If the first argument is an object, all its properties will be included in the JSON line.
@@ -223,9 +224,9 @@ declare namespace pino {
     type WriteFn = (o: object) => void;
 
     type LevelChangeEventListener<Options = LoggerOptions> = (
-        lvl: LevelWithSilent | string,
+        lvl: LiteralUnionWithString<pino.LevelWithSilent>,
         val: number,
-        prevLvl: LevelWithSilent | string,
+        prevLvl: LiteralUnionWithString<pino.LevelWithSilent>,
         prevVal: number,
         logger: Logger<Options>
     ) => void;
@@ -242,7 +243,7 @@ declare namespace pino {
     interface TransportTargetOptions<TransportOptions = Record<string, any>> {
         target: string
         options: TransportOptions
-        level: LevelWithSilent | string
+        level: LiteralUnionWithString<pino.LevelWithSilent>
     }
 
     interface TransportBaseOptions<TransportOptions = Record<string, any>> {
@@ -344,7 +345,7 @@ declare namespace pino {
          * One of the supported levels or `silent` to disable logging. Any other value defines a custom level and
          * requires supplying a level value via `levelVal`. Default: 'info'.
          */
-        level?: LevelWithSilent | string;
+        level?: LiteralUnionWithString<pino.LevelWithSilent>;
 
         /**
          * Use this option to define additional logging levels.
